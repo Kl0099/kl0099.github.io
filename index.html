@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Document</title>
+  </head>
+  <body>
+    <div
+      style="
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 30px;
+      "
+    >
+      <h1>Current Location</h1>
+      <button id="btn">Get location</button>
+      <p>Your full address</p>
+      <p id="address"></p>
+      <div
+        class="map"
+        id="map"
+      ></div>
+      <div style="height: 150px"></div>
+      <div
+        class="map"
+        id="speed"
+      ></div>
+    </div>
+    <script>
+      const timestampfunc = (timestamp) => {
+        // Assuming the timestamp is in milliseconds
+        var timestamp = timestamp;
+
+        // Create a new Date object with the timestamp
+        var date = new Date(timestamp);
+
+        // Get the individual components of the date
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1; // Months are zero-indexed, so we add 1
+        var day = date.getDate();
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var seconds = date.getSeconds();
+
+        // Format the date as desired
+        var formattedDate =
+          year +
+          "-" +
+          addZero(month) +
+          "-" +
+          addZero(day) +
+          " " +
+          addZero(hours) +
+          ":" +
+          addZero(minutes) +
+          ":" +
+          addZero(seconds);
+
+        // Function to add leading zeros if needed
+        function addZero(num) {
+          return (num < 10 ? "0" : "") + num;
+        }
+
+        // console.log(formattedDate);
+        return formattedDate;
+      };
+
+      const btn = document.getElementById("btn");
+      btn.addEventListener("click", () => {
+        if (navigator.geolocation.getCurrentPosition) {
+          console.log(
+            navigator.geolocation.watchPosition(
+              (position) => {
+                console.log(position);
+                let currtime = timestampfunc(position.timestamp);
+                const { latitude, longitude } = position.coords;
+                // console.log("laltitude: " + latitude);
+                // console.log("longitude: " + longitude);
+                const address = document.getElementById("address");
+                address.innerText = `${latitude} : ${longitude}`;
+
+                document.getElementById(
+                  "map"
+                ).innerHTML = `<iframe width='700' height='300' src="https://maps.google.com/maps?q=${latitude},${longitude}&amp;z=15&amp;output=embed"></iframe>`;
+                document.getElementById("speed").innerHTML = `speed : ${
+                  position.coords.speed && "null"
+                }/n 
+                currnetTime : ${currtime}`;
+                // console.log("time : ", timestampfunc(position.timestamp));
+              },
+              (error) => {
+                if (error) console.log(error.message);
+              }
+            )
+          );
+        }
+      });
+    </script>
+  </body>
+</html>
