@@ -75,7 +75,7 @@
       btn.addEventListener("click", () => {
         if (navigator.geolocation.getCurrentPosition) {
           console.log(
-            navigator.geolocation.watchPosition(
+            navigator.geolocation.getCurrentPosition(
               (position) => {
                 console.log(position);
                 let currtime = timestampfunc(position.timestamp);
@@ -89,7 +89,7 @@
                   "map"
                 ).innerHTML = `<iframe width='700' height='300' src="https://maps.google.com/maps?q=${latitude},${longitude}&amp;z=15&amp;output=embed"></iframe>`;
                 document.getElementById("speed").innerHTML = `speed : ${
-                  position.coords.speed && "null"
+                 "null"
                 }/n 
                 currnetTime : ${currtime}`;
                 // console.log("time : ", timestampfunc(position.timestamp));
